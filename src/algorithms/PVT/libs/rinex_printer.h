@@ -72,6 +72,7 @@ class Gps_Ephemeris;
 class Gps_Iono;
 class Gps_Navigation_Message;
 class Gps_Utc_Model;
+class Irnss_Ephemeris;
 class Rtklib_Solver;
 
 
@@ -199,6 +200,12 @@ public:
      */
     void log_rinex_nav_bds_dnav(int type_of_rx,
         const std::map<int32_t, Beidou_Dnav_Ephemeris>& new_bds_eph);
+
+    /*!
+     * \brief Print RINEX annotation for BeiDou DNAV message
+     */
+    void log_rinex_nav_irnss_nav(int type_of_rx,
+        const std::map<int32_t, Irnss_Ephemeris>& new_irn_eph);
 
     /*!
      * \brief Set processing for signals older than 2009
@@ -993,6 +1000,7 @@ private:
     std::fstream navGalFile;  // Output file stream for RINEX Galileo navigation data file
     std::fstream navGloFile;  // Output file stream for RINEX GLONASS navigation data file
     std::fstream navBdsFile;  // Output file stream for RINEX Galileo navigation data file
+    std::fstream navIrnFile;  // Output file stream for RINEX IRNSS navigation data file
     std::fstream navMixFile;  // Output file stream for RINEX Mixed navigation data file
 
     std::string navfilename;                      // Name of RINEX navigation file for GPS L1
@@ -1001,6 +1009,7 @@ private:
     std::string navGalfilename;                   // Name of RINEX navigation file for Galileo
     std::string navGlofilename;                   // Name of RINEX navigation file for Glonass
     std::string navBdsfilename;                   // Name of RINEX navigation file for BeiDou
+    std::string navIrnfilename;                   // Name of RINEX navigation file for IRNSS
     std::string navMixfilename;                   // Name of RINEX navigation file for fixed signals
     std::vector<std::string> output_navfilename;  // Name of output RINEX navigation file(s)
 

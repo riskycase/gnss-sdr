@@ -27,6 +27,8 @@ set(SYSTEM_PARAMETERS_SOURCES
     glonass_gnav_ephemeris.cc
     glonass_gnav_utc_model.cc
     glonass_gnav_navigation_message.cc
+    irnss_ephemeris.cc
+    irnss_navigation_message.cc
     reed_solomon.cc
 )
 
@@ -86,6 +88,11 @@ set(SYSTEM_PARAMETERS_HEADERS
     Beidou_B1I.h
     Beidou_B3I.h
     Beidou_DNAV.h
+    irnss_ephemeris.h
+    irnss_iono.h
+    IRNSS_L5.h
+    irnss_navigation_message.h
+    irnss_utc_model.h
     MATH_CONSTANTS.h
     reed_solomon.h
     galileo_has_page.h

@@ -52,6 +52,7 @@ set(TRACKING_ADAPTER_SOURCES
     beidou_b1i_dll_pll_tracking.cc
     beidou_b3i_dll_pll_tracking.cc
     gps_l1_ca_kf_vtl_tracking.cc
+    irnss_l5_dll_pll_tracking.cc
     ${OPT_TRACKING_ADAPTERS_SOURCES}
 )
 
@@ -73,6 +74,7 @@ set(TRACKING_ADAPTER_HEADERS
     beidou_b1i_dll_pll_tracking.h
     beidou_b3i_dll_pll_tracking.h
     gps_l1_ca_kf_vtl_tracking.h
+    irnss_l5_dll_pll_tracking.h
     ${OPT_TRACKING_ADAPTERS_HEADERS}
 )
 

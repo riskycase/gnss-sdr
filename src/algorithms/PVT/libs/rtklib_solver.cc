@@ -387,6 +387,7 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
     std::map<int, Gps_CNAV_Ephemeris>::const_iterator gps_cnav_ephemeris_iter;
     std::map<int, Glonass_Gnav_Ephemeris>::const_iterator glonass_gnav_ephemeris_iter;
     std::map<int, Beidou_Dnav_Ephemeris>::const_iterator beidou_ephemeris_iter;
+    std::map<int, Irnss_Ephemeris>::const_iterator irnss_ephemeris_iter;
 
     const Glonass_Gnav_Utc_Model gnav_utc = this->glonass_gnav_utc_model;
 
@@ -775,6 +776,35 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                         break;
                     }
 
+                case 'I':
+                    {
+                        // IRNSS
+                        // 1 IRNSS - find the ephemeris for the current GPS SV observation. The SV PRN ID is the map key
+                        const std::string sig_(gnss_observables_iter->second.Signal);
+                        if (sig_ == "I5")
+                            {
+                                irnss_ephemeris_iter = irnss_ephemeris_map.find(gnss_observables_iter->second.PRN);
+                                if (irnss_ephemeris_iter != irnss_ephemeris_map.cend())
+                                    {
+                                        // convert ephemeris from GNSS-SDR class to RTKLIB structure
+                                        eph_data[valid_obs] = eph_to_rtklib(irnss_ephemeris_iter->second);
+                                        // convert observation from GNSS-SDR class to RTKLIB structure
+                                        obsd_t newobs{};
+                                        d_obs_data[valid_obs + glo_valid_obs] = insert_obs_to_rtklib(newobs,
+                                            gnss_observables_iter->second,
+                                            irnss_ephemeris_iter->second.WN,
+                                            0,
+                                            this->is_pre_2009());
+                                        valid_obs++;
+                                    }
+                                else  // the ephemeris are not available for this SV
+                                    {
+                                        DLOG(INFO) << "No ephemeris data for SV " << gnss_observables_iter->first;
+                                    }
+                            }
+                        break;
+                    }
+
                 default:
                     DLOG(INFO) << "Hybrid observables: Unknown GNSS";
                     break;
@@ -872,6 +902,17 @@ bool Rtklib_Solver::get_PVT(const std::map<int, Gnss_Synchro> &gnss_observables_
                     nav_data.utc_cmp[2] = 0.0;  // ??
                     nav_data.utc_cmp[3] = 0.0;  // ??
                     nav_data.leaps = beidou_dnav_utc_model.DeltaT_LS;
+                }
+            if (irnss_iono.valid)
+                {
+                    nav_data.ion_irn[0] = irnss_iono.alpha0;
+                    nav_data.ion_irn[1] = irnss_iono.alpha1;
+                    nav_data.ion_irn[2] = irnss_iono.alpha2;
+                    nav_data.ion_irn[3] = irnss_iono.alpha3;
+                    nav_data.ion_irn[4] = irnss_iono.beta0;
+                    nav_data.ion_irn[5] = irnss_iono.beta1;
+                    nav_data.ion_irn[6] = irnss_iono.beta2;
+                    nav_data.ion_irn[7] = irnss_iono.beta3;
                 }
 
             /* update carrier wave length using native function call in RTKlib */

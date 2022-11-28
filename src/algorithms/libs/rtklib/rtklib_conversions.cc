@@ -26,6 +26,7 @@
 #include "gps_almanac.h"             // for Gps_Almanac
 #include "gps_cnav_ephemeris.h"      // for Gps_CNAV_Ephemeris
 #include "gps_ephemeris.h"           // for Gps_Ephemeris
+#include "irnss_ephemeris.h"         // for Irnss_Ephemeris
 #include "rtklib_rtkcmn.h"
 #include <cmath>
 #include <cstdint>
@@ -346,6 +347,64 @@ eph_t eph_to_rtklib(const Beidou_Dnav_Ephemeris& bei_eph)
             tow += 604800.0;
         }
     rtklib_sat.toe = gpst2time(rtklib_sat.week, toe);
+    rtklib_sat.toc = gpst2time(rtklib_sat.week, toc);
+    rtklib_sat.ttr = gpst2time(rtklib_sat.week, tow);
+
+    return rtklib_sat;
+}
+
+
+eph_t eph_to_rtklib(const Irnss_Ephemeris& irnss_eph)
+{
+    eph_t rtklib_sat = {0, 0, 0, 0, 0, 0, 0, 0, {0, 0}, {0, 0}, {0, 0}, 0.0, 0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, {}, {}, 0.0, 0.0};
+    rtklib_sat.sat = irnss_eph.PRN;
+    rtklib_sat.A = irnss_eph.sqrtA * irnss_eph.sqrtA;
+    rtklib_sat.M0 = irnss_eph.M_0;
+    rtklib_sat.deln = irnss_eph.delta_n;
+    rtklib_sat.OMG0 = irnss_eph.OMEGA_0;
+    rtklib_sat.OMGd = irnss_eph.OMEGAdot;
+    rtklib_sat.omg = irnss_eph.omega;
+    rtklib_sat.i0 = irnss_eph.i_0;
+    rtklib_sat.idot = irnss_eph.idot;
+    rtklib_sat.e = irnss_eph.ecc;
+    rtklib_sat.Adot = 0;  // only in CNAV;
+    rtklib_sat.ndot = 0;  // only in CNAV;
+
+    rtklib_sat.week = irnss_eph.WN; /* week of tow */
+    rtklib_sat.cic = irnss_eph.Cic;
+    rtklib_sat.cis = irnss_eph.Cis;
+    rtklib_sat.cuc = irnss_eph.Cuc;
+    rtklib_sat.cus = irnss_eph.Cus;
+    rtklib_sat.crc = irnss_eph.Crc;
+    rtklib_sat.crs = irnss_eph.Crs;
+    rtklib_sat.f0 = irnss_eph.af0;
+    rtklib_sat.f1 = irnss_eph.af1;
+    rtklib_sat.f2 = irnss_eph.af2;
+    rtklib_sat.tgd[0] = irnss_eph.TGD;
+    rtklib_sat.tgd[1] = 0.0;
+    rtklib_sat.tgd[2] = 0.0;
+    rtklib_sat.tgd[3] = 0.0;
+    rtklib_sat.toes = irnss_eph.toe;
+    rtklib_sat.toc = gpst2time(rtklib_sat.week, irnss_eph.toc);
+    rtklib_sat.ttr = gpst2time(rtklib_sat.week, irnss_eph.tow);
+
+    /* adjustment for week handover */
+    double tow;
+    double toc;
+    tow = time2gpst(rtklib_sat.ttr, &rtklib_sat.week);
+    toc = time2gpst(rtklib_sat.toc, nullptr);
+    if (rtklib_sat.toes < tow - 302400.0)
+        {
+            rtklib_sat.week++;
+            tow -= 604800.0;
+        }
+    else if (rtklib_sat.toes > tow + 302400.0)
+        {
+            rtklib_sat.week--;
+            tow += 604800.0;
+        }
+    rtklib_sat.toe = gpst2time(rtklib_sat.week, rtklib_sat.toes);
     rtklib_sat.toc = gpst2time(rtklib_sat.week, toc);
     rtklib_sat.ttr = gpst2time(rtklib_sat.week, tow);
 

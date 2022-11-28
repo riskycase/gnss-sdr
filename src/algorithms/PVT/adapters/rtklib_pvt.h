@@ -41,6 +41,7 @@ class Galileo_Almanac;
 class Galileo_Ephemeris;
 class Gps_Almanac;
 class Gps_Ephemeris;
+class Irnss_Ephemeris;
 
 /*!
  * \brief This class implements a PvtInterface for the RTKLIB PVT block
@@ -196,6 +197,7 @@ public:
     std::map<int, Galileo_Ephemeris> get_galileo_ephemeris() const override;
     std::map<int, Gps_Almanac> get_gps_almanac() const override;
     std::map<int, Galileo_Almanac> get_galileo_almanac() const override;
+    std::map<int, Irnss_Ephemeris> get_irnss_ephemeris() const;
 
     void connect(gr::top_block_sptr top_block) override;
     void disconnect(gr::top_block_sptr top_block) override;

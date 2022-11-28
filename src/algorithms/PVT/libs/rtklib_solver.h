@@ -54,6 +54,9 @@
 #include "gps_ephemeris.h"
 #include "gps_iono.h"
 #include "gps_utc_model.h"
+#include "irnss_ephemeris.h"
+#include "irnss_iono.h"
+#include "irnss_utc_model.h"
 #include "monitor_pvt.h"
 #include "pvt_solution.h"
 #include "rtklib.h"
@@ -94,6 +97,7 @@ public:
     std::map<int, Gps_CNAV_Ephemeris> gps_cnav_ephemeris_map;          //!< Map storing new GPS_CNAV_Ephemeris
     std::map<int, Glonass_Gnav_Ephemeris> glonass_gnav_ephemeris_map;  //!< Map storing new GLONASS GNAV Ephemeris
     std::map<int, Beidou_Dnav_Ephemeris> beidou_dnav_ephemeris_map;    //!< Map storing new BeiDou DNAV Ephmeris
+    std::map<int, Irnss_Ephemeris> irnss_ephemeris_map;    //!< Map storing new IRNSS_Ephmeris
 
     Galileo_Utc_Model galileo_utc_model;
     Galileo_Iono galileo_iono;
@@ -112,6 +116,9 @@ public:
     Beidou_Dnav_Utc_Model beidou_dnav_utc_model;
     Beidou_Dnav_Iono beidou_dnav_iono;
     std::map<int, Beidou_Dnav_Almanac> beidou_dnav_almanac_map;
+
+    Irnss_Utc_Model irnss_utc_model;
+    Irnss_Iono irnss_iono;
 
 private:
     bool save_matfile() const;

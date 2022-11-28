@@ -24,6 +24,7 @@
 #include "Galileo_E5a.h"
 #include "Galileo_E5b.h"
 #include "Galileo_E6.h"
+#include "IRNSS_L5.h"
 #include "configuration_interface.h"
 #include <glog/logging.h>
 #include <cstdint>
@@ -119,6 +120,11 @@ SignalGenerator::SignalGenerator(const ConfigurationInterface* configuration,
     else if (std::find(system.begin(), system.end(), "B") != system.end())
         {
             vector_length = static_cast<unsigned int>(round(static_cast<float>(fs_in) / (BEIDOU_B1I_CODE_RATE_CPS / BEIDOU_B1I_CODE_LENGTH_CHIPS)));
+        }
+
+    else if (std::find(system.begin(), system.end(), "I") != system.end())
+        {
+            vector_length = static_cast<unsigned int>(round(static_cast<float>(fs_in) / (IRNSS_L5_CODE_RATE_CPS / IRNSS_L5_CODE_LENGTH_CHIPS)));
         }
 
     if (item_type_ == "gr_complex")

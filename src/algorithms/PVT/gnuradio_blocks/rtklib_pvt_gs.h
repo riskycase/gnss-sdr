@@ -53,6 +53,7 @@ class GeoJSON_Printer;
 class Gps_Almanac;
 class Gps_Ephemeris;
 class Gpx_Printer;
+class Irnss_Ephemeris;
 class Kml_Printer;
 class Monitor_Pvt_Udp_Sink;
 class Monitor_Ephemeris_Udp_Sink;
@@ -108,6 +109,11 @@ public:
      * \brief Get latest set of BeiDou DNAV almanac from PVT block
      */
     std::map<int, Beidou_Dnav_Almanac> get_beidou_dnav_almanac_map() const;
+
+    /*!
+     * \brief Get latest set of IRNSS Ephemeris from PVT block
+     */
+    std::map<int, Irnss_Ephemeris> get_irnss_ephemeris_map() const;
 
     /*!
      * \brief Clear all ephemeris information and the almanacs for GPS and Galileo
@@ -208,7 +214,8 @@ private:
         evGLO_2G,
         evBDS_B1,
         evBDS_B2,
-        evBDS_B3
+        evBDS_B3,
+        evIRN_I5
     };
     std::map<std::string, StringValue_> d_mapStringValues;
     std::map<int, Gnss_Synchro> d_gnss_observables_map;
@@ -239,6 +246,9 @@ private:
     size_t d_beidou_dnav_utc_model_sptr_type_hash_code;
     size_t d_beidou_dnav_almanac_sptr_type_hash_code;
     size_t d_galileo_has_data_sptr_type_hash_code;
+    size_t d_irnss_ephemeris_sptr_type_hash_code;
+    size_t d_irnss_iono_sptr_type_hash_code;
+    size_t d_irnss_utc_model_sptr_type_hash_code;
 
     double d_rinex_version;
     double d_rx_time;
